@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useGameEvents } from '../hooks/useGameEvents';
-import { getPlayerContext, movePlayer } from '../api/players';
+import { getPlayerContext, movePlayer, attackPlayer } from '../api/players';
 import type { PlayerContext } from '../api/types';
 
 export function GamePlay() {
@@ -44,6 +44,15 @@ export function GamePlay() {
         }
     }
 
+    async function handleAttack(targetPlayerId: string) {
+        try {
+            await attackPlayer(gameId!, auth.token!, targetPlayerId);
+            await loadContext(); // Refresh context
+        } catch (error) {
+            console.error('Failed to attack:', error);
+        }
+    }
+
     if (!context) return <div>Loading...</div>;
 
     return (
@@ -60,7 +69,14 @@ export function GamePlay() {
 
             <h2>Players Here</h2>
             {context.players_here.map(p => (
-                <div key={p.id}>{p.name} (HP: {p.health})</div>
+                <div key={p.id}>
+                    {p.name} (HP: {p.health})
+                    {p.id !== auth.playerId && p.health > 0 && (
+                        <button onClick={() => handleAttack(p.id)} className="ml-2 text-red-600 hover:text-red-800">
+                            Attack
+                        </button>
+                    )}
+                </div>
             ))}
 
             <h2>Events</h2>
