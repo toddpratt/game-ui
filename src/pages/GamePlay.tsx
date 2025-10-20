@@ -1,4 +1,3 @@
-// src/pages/GamePlay.tsx
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -17,6 +16,15 @@ export function GamePlay() {
             loadContext();
         }
     }, [gameId, auth.token]);
+
+    useEffect(() => {
+        if (events.length === 0) return;
+        const latestEvent = events[events.length - 1];
+        // Refresh player list when players move, join, leave, or are defeated
+        if (latestEvent.type === 'player_moved' || latestEvent.type === 'player_joined' || latestEvent.type === 'player_left') {
+            loadContext();
+        }
+    }, [events]);
 
     async function loadContext() {
         try {
