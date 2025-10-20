@@ -17,6 +17,8 @@ export interface Player {
     name: string;
     current_location: string;
     health: number;
+    strength: number;
+    dexterity: number;
 }
 
 export interface GameEvent {

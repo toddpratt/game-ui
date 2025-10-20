@@ -60,6 +60,11 @@ export function GamePlay() {
             <h1>{context.current_location.name}</h1>
             <p>{context.current_location.description}</p>
 
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded">
+                <h3 className="font-bold">{context.player.name}</h3>
+                <p>HP: {context.player.health} | STR: {context.player.strength} | DEX: {context.player.dexterity}</p>
+            </div>
+
             <h2>Exits</h2>
             {context.connected_locations.map(loc => (
                 <button key={loc.id} onClick={() => handleMove(loc.id)}>
@@ -70,7 +75,7 @@ export function GamePlay() {
             <h2>Players Here</h2>
             {context.players_here.map(p => (
                 <div key={p.id}>
-                    {p.name} (HP: {p.health})
+                    {p.name} (HP: {p.health}, STR: {p.strength}, DEX: {p.dexterity})
                     {p.id !== auth.playerId && p.health > 0 && (
                         <button onClick={() => handleAttack(p.id)} className="ml-2 text-red-600 hover:text-red-800">
                             Attack
